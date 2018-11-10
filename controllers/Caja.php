@@ -1,0 +1,122 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Caja extends CI_Controller {
+    
+    public function index() {
+        
+    }
+
+    public function imprimir_recibos() {
+        redirect('caja/recibos');
+    }
+
+    public function reportes() {
+        redirect('caja/reportes');
+    }
+
+    public function pagos_por_plantel() {
+        $this->load->model('campus/campus_model');
+        $planteles = $this->campus_model->planteles();
+        
+        if ( $this->input->post() ) {
+            $this->form_validation->set_rules('plantel', 'Plantel', 'required');
+            $this->form_validation->set_rules('fecha', 'Fecha', 'required');
+            if ( $this->form_validation->run() ) {
+                
+                $plantel = ( $this->input->post('plantel') == "PUEBLA" ) ? 1 : 2 ;
+                
+                $this->load->model('caja/recibos_model');
+                $this->load->model('caja/polizas_model');
+                $this->load->model('campus/People');
+                
+                $recibos = $this->recibos_model->getByPlantelAndDate(
+                    $plantel, 
+                    $this->input->post('fecha')
+                );
+                $polizas = $this->polizas_model->getByPlantelAndDate(
+                    $plantel,
+                    $this->input->post('fecha')
+                );
+                $faltantes = array();
+                
+                foreach( $recibos as $r ) {
+                    if ( $r->matricula == "VAR" ) {
+                        $r->matricula = ($plantel == 1) ? '000100012' : '000100013' ;
+                    } else {
+                        $people = $this->people_model->getByTaxId($r->matricula);
+                        if ( $people->matricula == '' ) {
+                            $faltantes[] = $r;
+                        } else {
+                            $r->matricula = $people->matricula;
+                        }
+                    }
+                }
+                
+                foreach( $polizas as $p ) {
+                    if ( $p->matricula == "VAR" ) {
+                        $p->matricula = ($plantel == 1) ? '000100012' : '000100013' ;
+                    } else {
+                        $people = $this->people_model->getByTaxId($p->matricula);
+                        if ( $people->matricula == '' ) {
+                            $faltantes[] = $p;
+                        } else {
+                            $p->matricula = $people->matricula;
+                        }
+                    }
+                }
+                
+                return $this->load->view(
+                    '', 
+                    compact(
+                        'recibos', 
+                        'polizas', 
+                        'faltantes'
+                    )
+                );
+            }
+        }
+        return $this->load->view( '', compact('planteles') );
+    }
+
+    public function corte_por_plantel() {
+        $this->load->model('campus/campus_model');
+        $this->load->model('caja/caja_model');
+
+        $planteles = $this->campus_model->planteles();
+        $cajeros = $this->caja_model->getCajeros();
+
+        if ( $this->input->post() ) {
+            $this->form_validation->set_rules('plantel', 'Plantel', 'required');
+            $this->form_validation->set_rules('cajero', 'Cajero', 'required');
+            $this->form_validation->set_rules('fecha', 'Fecha', 'required');
+            if ( $this->form_validation->run() ) {
+                
+                $plantel = ( $this->input->post('plantel') == "PUEBLA" ) ? 1 : 2 ;
+                
+                $this->load->model('caja/recibos_model');
+                $this->load->model('caja/polizas_model');
+                
+                $corte_recibos = $this->recibos_model->corte(
+                    $plantel,
+                    $this->input->post('fecha'),
+                    $this->input->post('cajero')
+                );
+                $corte_polizas = $this->polizas_model->corte(
+                    $plantel,
+                    $this->input->post('fecha'),
+                    $this->input->post('cajero')
+                );
+
+                return $this->load->view(
+                    '', 
+                    compact(
+                        'corte_recibos',
+                        'corte_polizas'
+                    )
+                );
+            }
+        }
+        return $this->load->view( '', compact('planteles', 'cajeros') );
+    }
+}
