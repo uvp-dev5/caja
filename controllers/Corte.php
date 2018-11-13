@@ -36,11 +36,11 @@ class Corte extends CI_Controller {
                     $l->total_lote = $this->caja_model->totalLote($l->BATCH_NUMBER);
                 }
 
-                $this->load->view('caja/reportes/corte/lote', compact('lote'));
+                $this->load->view('caja/reportes/corte_lote', compact('lote'));
             }
         }
 
-        return $this->load->view('caja/reportes/corte/lote', compact('lote'));
+        return $this->load->view('caja/reportes/corte_lote', compact('lote'));
     }
 
     public function caja_detalle() {
@@ -71,11 +71,11 @@ class Corte extends CI_Controller {
                     $l->total_lote = $this->caja_model->totalLote($l->BATCH_NUMBER);
                 }
 
-                $this->load->view('caja/reportes/corte/lote', compact('lote'));
+                $this->load->view('caja/reportes/corte_lote', compact('lote'));
             }
         }
 
-        return $this->load->view('caja/reportes/corte/lote', compact('lote'));
+        return $this->load->view('caja/reportes/corte_lote', compact('lote'));
     }
 
     public function caja_total() {
@@ -108,11 +108,11 @@ class Corte extends CI_Controller {
                     $l->total_lote = $this->caja_model->totalLote($l->BATCH_NUMBER);
                 }
 
-                $this->load->view('caja/reportes/corte/lote', compact('lote'));
+                $this->load->view('caja/reportes/corte_lote', compact('lote'));
             }
         }
 
-        return $this->load->view('caja/reportes/corte/lote', compact('lote'));
+        return $this->load->view('caja/reportes/corte_lote', compact('lote'));
     }
 
     public function vouchers() {
@@ -135,10 +135,10 @@ class Corte extends CI_Controller {
             if ( $this->form_validation->run() ) {
                 $this->load->model('caja/cajero_model');
                 $vouchers = $this->cajero_model->getVouchersPerDay($plantel, $fecha_inicial, $fecha_final);
-                return $this->load->view('caja/reportes/corte/voucher', compact('vouchers'));
+                return $this->load->view('caja/reportes/corte_voucher', compact('vouchers'));
             }
         }
-        return $this->load->view('caja/reportes/corte/voucher', compact('vouchers'));
+        return $this->load->view('caja/reportes/corte_voucher', compact('vouchers'));
     }
 
     /**

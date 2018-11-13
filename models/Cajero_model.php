@@ -74,4 +74,35 @@ class Cajero_model extends CI_Model {
 
         return $query->result();
     }
+
+    public function getRecibosPerDate($operator_id, $plantel = false, $fecha = false) {
+        if ( !$fecha ) {
+            $fecha = date('Y-m-d');
+        }
+        $sql = "SELECT DISTINCT
+                    t1.PEOPLE_ORG_ID pid, 
+                    t3.TAX_ID taxid,
+                    (t3.FIRST_NAME+' '+t3.MIDDLE_NAME+' '+t3.LAST_NAME) nombre, 
+                    t1.RECEIPT_NUMBER recibo, 
+                    t1.RECEIPT_AMOUNT monto,
+                    t2.CHARGECREDITNUMBER pago,
+                    t4.ChargeAppliedTo aplicado
+                FROM CASHRECEIPT t1, CHARGECREDIT t2, PEOPLE t3, ChargeCreditApplication t4
+                WHERE t1.RECEIPT_NUMBER = t2.RECEIPT_NUMBER
+                AND t1.PEOPLE_ORG_ID = t3.PEOPLE_ID
+                AND t1.ENTRY_DATE = '$fecha' ";
+        if ( $plantel ) {
+            $sql.= "AND t1.ACADEMIC_SESSION = '".$plantel."' ";
+        }
+        if ( $operator_id != '' ) {
+            $sql.= "AND t1.CREATE_OPID = '".$operator_id."' ";
+        }
+        
+        $sql.= "AND t2.CHARGECREDITNUMBER = t4.ChargeCreditSource
+                ORDER BY recibo DESC ";
+        
+        $query = $this->campus->query($sql);
+
+        return $query->result();
+    }
 }

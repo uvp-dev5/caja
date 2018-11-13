@@ -76,6 +76,26 @@ class Caja_model extends CI_Model {
         return $query->row()->upc;
     }
 
+    public function getCajeroByClave($clave) {
+        $this->nom->select("cveubi as clave_ubicacion, (nombre + ' ' + ' ' + apepat + ' ' + apemat) as nombre_completo");
+        $this->nom->where(array(
+            'cvetra' => $clave
+        ));
+        $query = $this->nom->get('nomtrab');
+
+        return $query->row();
+    }
+
+    public function getOperatorIdByPeopleCode($people_code) {
+        $this->campus->select('operator_id');
+        $this->campus->where(array(
+            'people_code_id' => $people_code
+        ));
+        $query = $this->campus->get('abt_users');
+
+        return $query->row()->operator_id;
+    }
+
     public function totalLote($batch_number) {
         $this->campus->select_sum('RECEIPT_AMOUNT', 'suma');
         $this->campus->where(array(

@@ -16,14 +16,14 @@
     <tbody>
         <?php foreach ( $vouchers as $v ) : ?>
         <tr>
-            <td><?php echo $l->recibo ; ?></td>
-            <td><?php echo $l->idpc ; ?></td>
-            <td><?php echo $l->matricula ; ?></td>
-            <td><?php echo $l->alumno ; ?></td>
-            <td><?php echo $l->lote ; ?></td>
-            <td><?php echo $l->fecha ; ?></td>
-            <td><?php echo $l->monto ; ?></td>
-            <td><?php echo $l->descripcion ; ?></td>
+            <td><?php echo $v->recibo ; ?></td>
+            <td><?php echo $v->idpc ; ?></td>
+            <td><?php echo $v->matricula ; ?></td>
+            <td><?php echo $v->alumno ; ?></td>
+            <td><?php echo $v->lote ; ?></td>
+            <td><?php echo $v->fecha ; ?></td>
+            <td><?php echo $v->monto ; ?></td>
+            <td><?php echo $v->descripcion ; ?></td>
         </tr>
         <?php endforeach ?>
     </tbody>

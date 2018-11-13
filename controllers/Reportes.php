@@ -26,7 +26,7 @@ class Reportes extends CI_Controller {
             if ( $this->form_validation->run() ) {
                 //Here should implement Reportes/alumnos_reinscritos_detalle.php
                 $this->load->model('caja/alumnos_model');
-                $alumnos_reinscritos = $this->alumnos_model->reinscritos(
+                $alumnos = $this->alumnos_model->reinscritos(
                     $this->input->post('plantel'),
                     $this->input->post('periodo'),
                     $this->input->post('year'),
@@ -34,9 +34,17 @@ class Reportes extends CI_Controller {
                     $this->input->post('modalidad'),
                     $this->input->post('carrera')//false
                 );
+                
+                $tipo_periodo = '';
+                if ( stristr($this->input->post('periodo'), 'semestre') ) {
+                    $tipo_periodo = 'Semestre';
+                } else if ( stristr($this->input->post('periodo'), 'cuatrim') ) {
+                    $tipo_periodo = 'Cuatrimestre';
+                }
+
                 return $this->load->view(
-                    '', 
-                    compact('alumnos_reinscritos')
+                    'caja/reportes/alumnos.php', 
+                    compact('alumnos', 'tipo_periodo')
                 );
             }
         }
@@ -73,7 +81,7 @@ class Reportes extends CI_Controller {
             if ( $this->form_validation->run() ) {
                 //Here should implement Reportes/alumnos_nuevos_detalle.php
                 $this->load->model('caja/alumnos_model');
-                $alumnos_nuevos = $this->alumnos_model->nuevos(
+                $alumnos = $this->alumnos_model->nuevos(
                     $this->input->post('plantel'),
                     $this->input->post('periodo'),
                     $this->input->post('year'),
@@ -81,9 +89,17 @@ class Reportes extends CI_Controller {
                     $this->input->post('modalidad'),
                     $this->input->post('carrera')//false
                 );
+
+                $tipo_periodo = '';
+                if ( stristr($this->input->post('periodo'), 'semestre') ) {
+                    $tipo_periodo = 'Semestre';
+                } else if ( stristr($this->input->post('periodo'), 'cuatrim') ) {
+                    $tipo_periodo = 'Cuatrimestre';
+                }
+
                 return $this->load->view(
-                    '', 
-                    compact('alumnos_nuevos')
+                    'caja/reportes/alumnos', 
+                    compact('alumnos', 'tipo_periodo')
                 );
             }
         }
@@ -120,7 +136,7 @@ class Reportes extends CI_Controller {
             if ( $this->form_validation->run() ) {
                 //Here should implement Reportes/alumnos_bajas.php
                 $this->load->model('caja/alumnos_model');
-                $alumnos_nuevos = $this->alumnos_model->bajas()(
+                $alumnos = $this->alumnos_model->bajas()(
                     $this->input->post('plantel'),
                     $this->input->post('periodo'),
                     $this->input->post('year'),
@@ -128,14 +144,22 @@ class Reportes extends CI_Controller {
                     $this->input->post('modalidad'),
                     $this->input->post('carrera')//false
                 );
+
+                $tipo_periodo = '';
+                if ( stristr($this->input->post('periodo'), 'semestre') ) {
+                    $tipo_periodo = 'Semestre';
+                } else if ( stristr($this->input->post('periodo'), 'cuatrim') ) {
+                    $tipo_periodo = 'Cuatrimestre';
+                }                
+
                 return $this->load->view(
-                    '', 
-                    compact('alumnos_nuevos')
+                    'caja/reportes/alumnos_baja', 
+                    compact('alumnos', 'tipo_periodo')
                 );
             }
         }
         return $this->load->view(
-            '',
+            'caja/reportes/alumnos_baja',
             compact(
                 'planteles',
                 'years',
@@ -199,10 +223,10 @@ class Reportes extends CI_Controller {
     }
 
     public function alumnos_inscritos() {
-
+        //Check admisiones/rep_inscritos.php
     }
 
     public function alumnos_inscritos_completos() {
-
+        //Check admisiones/rep_inscritos_completos.php
     }
 }
