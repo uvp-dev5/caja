@@ -23,7 +23,7 @@ class Api extends CI_Controller {
 
         foreach ( $cajeros as $c ) {
             if ( $c->upc != '' ) {
-                $people_code = substr($c->upc, 3)
+                $people_code = substr($c->upc, 3);
 
                 $c->value = $people_code;
                 $c->description = utf8_encode($this->caja_model->getUPCByPeopleCode($people_code));

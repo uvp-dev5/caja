@@ -2,8 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Recibos_model extends CI_Model {
-    
-    private $table = 'caja_recibos';
+
     private $janus;
 
     public function __construct() {
@@ -32,7 +31,7 @@ class Recibos_model extends CI_Model {
                 'cancelado' => $cancelado
             ));
         }
-        $query = $this->janus->get($this->table);
+        $query = $this->janus->get('caja_recibos');
 
         return $query->result();
     }
@@ -57,7 +56,7 @@ class Recibos_model extends CI_Model {
             ));
         }
         
-        $query = $this->get($this->table);
+        $query = $this->get('caja_recibos');
 
         return $query->row();
     }

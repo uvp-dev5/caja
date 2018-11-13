@@ -75,4 +75,15 @@ class Caja_model extends CI_Model {
 
         return $query->row()->upc;
     }
+
+    public function totalLote($batch_number) {
+        $this->campus->select_sum('RECEIPT_AMOUNT', 'suma');
+        $this->campus->where(array(
+            'batch' => $batch_number,
+            'void_flag', 'N'
+        ));
+        $query = $this->campus->get('cashreceipt');
+
+        return $query->row()->suma;
+    }
 }

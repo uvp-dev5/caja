@@ -75,6 +75,10 @@ class Alumnos_model extends CI_Model {
         }
 
         $sql.= "ORDER BY A.PEOPLE_ID ";
+
+        $query = $this->campus->query($sql);
+
+        return $query->result();
     }
 
     public function reinscritos($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
@@ -336,6 +340,10 @@ class Alumnos_model extends CI_Model {
         $sql.= "AND td.ADD_DROP_WAIT <> 'D' ";
         $sql.= "$SinGruposIngles ) tabla ";
         $sql.= "ORDER BY nombre ";
+
+        $query = $this->campus->query($sql);
+
+        return $query->result();
     }
 
 }
