@@ -34,11 +34,12 @@ class Caja extends CI_Controller {
                     $plantel, 
                     $this->input->post('fecha')
                 );
+                $faltantes_recibos = array();
                 $polizas = $this->polizas_model->getByPlantelAndDate(
                     $plantel,
                     $this->input->post('fecha')
                 );
-                $faltantes = array();
+                $faltantes_polizas = array();
                 
                 foreach( $recibos as $r ) {
                     if ( $r->matricula == "VAR" ) {
@@ -46,7 +47,7 @@ class Caja extends CI_Controller {
                     } else {
                         $people = $this->people_model->getByTaxId($r->matricula);
                         if ( $people->matricula == '' ) {
-                            $faltantes[] = $r;
+                            $faltantes_recibos[] = $r;
                         } else {
                             $r->matricula = $people->matricula;
                         }
@@ -59,7 +60,7 @@ class Caja extends CI_Controller {
                     } else {
                         $people = $this->people_model->getByTaxId($p->matricula);
                         if ( $people->matricula == '' ) {
-                            $faltantes[] = $p;
+                            $faltantes_polizas[] = $p;
                         } else {
                             $p->matricula = $people->matricula;
                         }
@@ -67,16 +68,17 @@ class Caja extends CI_Controller {
                 }
                 
                 return $this->load->view(
-                    '', 
+                    'pagos_por_plantel', 
                     compact(
                         'recibos', 
                         'polizas', 
-                        'faltantes'
+                        'faltantes_recibos',
+                        'faltantes_polizas'
                     )
                 );
             }
         }
-        return $this->load->view( '', compact('planteles') );
+        return $this->load->view( 'pagos_por_plantel', compact('planteles') );
     }
 
     public function corte_por_plantel() {
