@@ -15,7 +15,7 @@ class Caja extends CI_Controller {
         redirect('caja/reportes');
     }
 
-    public function pagos_por_plantel() {
+    public function plantel_pagos() {
         $this->load->model('campus/campus_model');
         $planteles = $this->campus_model->planteles();
         
@@ -68,7 +68,7 @@ class Caja extends CI_Controller {
                 }
                 
                 return $this->load->view(
-                    'pagos_por_plantel', 
+                    'plantel_pagos', 
                     compact(
                         'recibos', 
                         'polizas', 
@@ -78,7 +78,7 @@ class Caja extends CI_Controller {
                 );
             }
         }
-        return $this->load->view( 'pagos_por_plantel', compact('planteles') );
+        return $this->load->view( 'plantel_pagos', compact('planteles') );
     }
 
     public function corte_por_plantel() {
@@ -111,7 +111,7 @@ class Caja extends CI_Controller {
                 );
 
                 return $this->load->view(
-                    '', 
+                    'plantel_corte', 
                     compact(
                         'corte_recibos',
                         'corte_polizas'
@@ -119,6 +119,6 @@ class Caja extends CI_Controller {
                 );
             }
         }
-        return $this->load->view( '', compact('planteles', 'cajeros') );
+        return $this->load->view( 'plantel_corte', compact('planteles', 'cajeros') );
     }
 }
