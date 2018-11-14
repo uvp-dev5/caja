@@ -74,8 +74,21 @@ class Cajero_model extends CI_Model {
 
         return $query->result();
     }
-
-    public function getRecibosPerDate($operator_id, $plantel = false, $fecha = false) {
+    
+    /**
+     * Obtiene la informacion relacionada a los recibos generados por un operador en especifico. 
+     * También se puede definir el plantel y la fecha de los recibos, pero es opcional
+     *
+     * @param [string] $operator_id Identificador del operador que genero los recibos
+     * @param boolean|string $plantel Si no se proporciona se obtiene los recibos indeferentemente al 
+     * plantel donde fueron generados, si se proporciona se obtiene los recibos generados en el plantel 
+     * especificado
+     * @param boolean|string $fecha Si no se proporciona se obtienen los recibos del dia de hoy, si se 
+     * proporciona una fecha en formato YYYY-mm-dd (Y-m-d) se obtienen solamente los recibos generados en 
+     * dicha fecha
+     * @return void
+     */
+    public function getRecibos($operator_id, $plantel = false, $fecha = false) {
         if ( !$fecha ) {
             $fecha = date('Y-m-d');
         }

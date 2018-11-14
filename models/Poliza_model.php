@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Polizas_model extends CI_Model {
+class Poliza_model extends CI_Model {
     
     private $table = 'caja_polizas';
     private $janus;
@@ -11,33 +11,7 @@ class Polizas_model extends CI_Model {
         $this->janus = $this->load->database('janus', TRUE);
     }
 
-    public function list() {
-    }
-
-    public function get() {
-    }
-
-    public function getByPlantelAndDate($plantel, $fecha, $cancelado = false) {
-        $this->janus->select('no_poliza, matricula, descri, importe, DATE_FORMAT(fecha_opera,"%d/%m/%Y") AS fecha_opera, tipo_pago');
-        if (! $cancelado ) {
-            $this->janus->where(array(
-                'unidad' => $plantel,
-                'fecha_opera' => $fecha,
-                'cancelado' => '0'
-            ));
-        } else {
-            $this->janus->where(array(
-                'unidad' => $plantel,
-                'fecha_opera' => $fecha,
-                'cancelado' => $cancelado
-            ));
-        }
-        $query = $this->janus->get($this->table);
-
-        return $query->result();
-    }
-
-    public function corte($plantel, $fecha, $cajero, $cancelado = false) {
+    public function getCorte($plantel, $fecha, $cajero, $cancelado = false) {
         $this->janus->select_max('no_poliza', 'maximo');
         $this->janus->select_min('no_poliza', 'minimo');
         $this->janus->select_sum('importe', 'total');
@@ -62,12 +36,23 @@ class Polizas_model extends CI_Model {
         return $query->row();
     }
 
-    public function create() {
-    }
+    public function listByPlantelAndDate($plantel, $fecha, $cancelado = false) {
+        $this->janus->select('no_poliza, matricula, descri, importe, DATE_FORMAT(fecha_opera,"%d/%m/%Y") AS fecha_opera, tipo_pago');
+        if (! $cancelado ) {
+            $this->janus->where(array(
+                'unidad' => $plantel,
+                'fecha_opera' => $fecha,
+                'cancelado' => '0'
+            ));
+        } else {
+            $this->janus->where(array(
+                'unidad' => $plantel,
+                'fecha_opera' => $fecha,
+                'cancelado' => $cancelado
+            ));
+        }
+        $query = $this->janus->get($this->table);
 
-    public function update() {
-    }
-
-    public function delete() {
+        return $query->result();
     }
 }

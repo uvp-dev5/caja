@@ -25,8 +25,8 @@ class Reportes extends CI_Controller {
             
             if ( $this->form_validation->run() ) {
                 //Here should implement Reportes/alumnos_reinscritos_detalle.php
-                $this->load->model('caja/alumnos_model');
-                $alumnos = $this->alumnos_model->reinscritos(
+                $this->load->model('caja/alumno_model');
+                $alumnos = $this->alumno_model->listReinscritos(
                     $this->input->post('plantel'),
                     $this->input->post('periodo'),
                     $this->input->post('year'),
@@ -80,8 +80,8 @@ class Reportes extends CI_Controller {
             
             if ( $this->form_validation->run() ) {
                 //Here should implement Reportes/alumnos_nuevos_detalle.php
-                $this->load->model('caja/alumnos_model');
-                $alumnos = $this->alumnos_model->nuevos(
+                $this->load->model('caja/alumno_model');
+                $alumnos = $this->alumno_model->listNuevos(
                     $this->input->post('plantel'),
                     $this->input->post('periodo'),
                     $this->input->post('year'),
@@ -135,8 +135,8 @@ class Reportes extends CI_Controller {
             
             if ( $this->form_validation->run() ) {
                 //Here should implement Reportes/alumnos_bajas.php
-                $this->load->model('caja/alumnos_model');
-                $alumnos = $this->alumnos_model->bajas()(
+                $this->load->model('caja/alumno_model');
+                $alumnos = $this->alumno_model->listBajas()(
                     $this->input->post('plantel'),
                     $this->input->post('periodo'),
                     $this->input->post('year'),

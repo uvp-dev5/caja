@@ -26,16 +26,16 @@ class Caja extends CI_Controller {
                 
                 $plantel = ( $this->input->post('plantel') == "PUEBLA" ) ? 1 : 2 ;
                 
-                $this->load->model('caja/recibos_model');
-                $this->load->model('caja/polizas_model');
+                $this->load->model('caja/recibo_model');
+                $this->load->model('caja/poliza_model');
                 $this->load->model('campus/People');
                 
-                $recibos = $this->recibos_model->getByPlantelAndDate(
+                $recibos = $this->recibo_model->listByPlantelAndDate(
                     $plantel, 
                     $this->input->post('fecha')
                 );
                 $faltantes_recibos = array();
-                $polizas = $this->polizas_model->getByPlantelAndDate(
+                $polizas = $this->poliza_model->listByPlantelAndDate(
                     $plantel,
                     $this->input->post('fecha')
                 );
@@ -96,15 +96,15 @@ class Caja extends CI_Controller {
                 
                 $plantel = ( $this->input->post('plantel') == "PUEBLA" ) ? 1 : 2 ;
                 
-                $this->load->model('caja/recibos_model');
-                $this->load->model('caja/polizas_model');
+                $this->load->model('caja/recibo_model');
+                $this->load->model('caja/poliza_model');
                 
-                $corte_recibos = $this->recibos_model->corte(
+                $corte_recibos = $this->recibo_model->getCorte(
                     $plantel,
                     $this->input->post('fecha'),
                     $this->input->post('cajero')
                 );
-                $corte_polizas = $this->polizas_model->corte(
+                $corte_polizas = $this->poliza_model->getCorte(
                     $plantel,
                     $this->input->post('fecha'),
                     $this->input->post('cajero')
@@ -119,6 +119,12 @@ class Caja extends CI_Controller {
                 );
             }
         }
-        return $this->load->view( 'plantel_corte', compact('planteles', 'cajeros') );
+        return $this->load->view(
+            'plantel_corte', 
+            compact(
+                'planteles', 
+                'cajeros'
+            ) 
+        );
     }
 }

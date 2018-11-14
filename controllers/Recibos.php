@@ -37,25 +37,30 @@ class Recibos extends CI_Controller {
 
     public function por_recibo_id() {
         if ( $this->input->post() ) {
-            $this->form_validation->set_rule('recibo', 'Número de recibo', 'required');
+            $this->form_validation->set_rule('recibo_id', 'Número de recibo', 'required');
 
             if ( $this->form_validation->run() ) {
-
+                $this->load->model('caja/recibo_model');
+                $recibo = $this->recibo_model->getInfoById($this->input->post('recibo_id'));
+                if ( is_null($recibo->TAX_ID) || ($recibo->TAX_ID == '') ) {
+                    //Si el TAX_ID no existe hay que obtenerlo, ver recibos/verificacion.php, linea 119
+                }
+                //Una vez contemos con un TAX_ID ver recibo_p.php
             }
         }
-        return $this->load->view('caja/reportes/recibo');
+        return $this->load->view('caja/reportes/recibo_por_id');
     }
 
-    public function por_persona_id() {
+    public function por_persona() {
         if ( $this->input->post() ) {
             $this->form_validation_rule('tax_id', 'Tax ID', 'required');
 
             if ( $this->form_validation->run() ) {
                 $this->load->model('campus/people_model');
-                $this->load->model('caja/recibos_model');
+                $this->load->model('caja/recibo_model');
 
                 $people = $this->people_model->getByTaxId($this->input->post('tax_id'));
-                $recibos = $this->recibos_model->getByComprador($people->matricula);
+                $recibos = $this->recibo_model->listByComprador($people->matricula);
                 
                 foreach ( $recibos as $r ) {
                     $detalles_compra = $this->recibo_model->getInfoByComprador($r->aplicado);
@@ -74,9 +79,9 @@ class Recibos extends CI_Controller {
             $this->form_validation->set_rule('lote_id', 'Número de lote', 'required');
 
             if ( $this->form_validation->run() ) {
-                $this->load->model('caja/recibos_model');
+                $this->load->model('caja/recibo_model');
                 
-                $recibos = $this->recibos_model->getByLote($this->input->post('lote_id'));
+                $recibos = $this->recibo_model->listByLote($this->input->post('lote_id'));
 
                 return $this->load->view('caja/reportes/recibos_por_lote', compact('recibos'));
             }

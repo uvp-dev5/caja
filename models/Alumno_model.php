@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Alumnos_model extends CI_Model {
+class Alumno_model extends CI_Model {
     
     private $campus;
     
@@ -10,7 +10,7 @@ class Alumnos_model extends CI_Model {
         $this->campus = $this->load->database('campus', TRUE);
     }
 
-    public function nuevos($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
+    public function listNuevos($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
         $sql = "SELECT ";
         $sql.= "P.TAX_ID AS matricula, ";
         $sql.= "A.PEOPLE_ID AS idpc, ";
@@ -81,7 +81,7 @@ class Alumnos_model extends CI_Model {
         return $query->result();
     }
 
-    public function reinscritos($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
+    public function listReinscritos($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
         $last_year = $year - 1;
         $periodo_anterior = '';
         switch ( $periodo ) {
@@ -253,7 +253,7 @@ class Alumnos_model extends CI_Model {
         return $query->result();
     }
 
-    public function bajas($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
+    public function listBajas($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
         $sql = "SELECT DISTINCT ";
         $sql.= "TAX_ID, ";
         $sql.= "PEOPLE_ID AS id, ";
