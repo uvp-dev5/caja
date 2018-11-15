@@ -12,11 +12,11 @@ class Alumno_model extends CI_Model {
 
     public function listNuevos($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
         $sql = "SELECT ";
-        $sql.= "P.TAX_ID AS matricula, ";
-        $sql.= "A.PEOPLE_ID AS idpc, ";
-        $sql.= "(P.FIRST_NAME+' '+P.MIDDLE_NAME) nombre, ";
-        $sql.= "P.LAST_NAME ap1, ";
-        $sql.= "P.Last_Name_Prefix ap2, ";
+        $sql.= "P.TAX_ID AS MATRICULA, ";
+        $sql.= "A.PEOPLE_ID AS IDPC, ";
+        $sql.= "(P.FIRST_NAME+' '+P.MIDDLE_NAME) NOMBRE, ";
+        $sql.= "P.LAST_NAME AP1, ";
+        $sql.= "P.Last_Name_Prefix AP2, ";
         
         $sql.= "(SELECT TOP 1 EMAIL_ADDRESS FROM ADDRESSSCHEDULE ";
         $sql.= "WHERE PEOPLE_ORG_ID = A.PEOPLE_ID ";
@@ -25,13 +25,13 @@ class Alumno_model extends CI_Model {
         $sql.= "(SELECT PersonPhone.PhoneNumber FROM PEOPLE ";
         $sql.= "LEFT JOIN PersonPhone ";
         $sql.= "ON PEOPLE.PrimaryPhoneId = PersonPhone.PersonPhoneId ";
-        $sql.= "WHERE PEOPLE.PEOPLE_ID = A.PEOPLE_ID) AS PhoneNumber, ";
+        $sql.= "WHERE PEOPLE.PEOPLE_ID = A.PEOPLE_ID) AS PHONE_NUMBER, ";
         
-        $sql.= "C2.LONG_DESC AS carrera, ";
-        $sql.= "C.CRG_CRD_DESC AS concepto, ";
-        $sql.= "C.PAID_AMOUNT AS pago, ";
-        $sql.= "C.REVISION_DATE AS fecha_pago, ";
-        $sql.= "cd.MEDIUM_DESC AS desicion, cs.MEDIUM_DESC AS statuss ";
+        $sql.= "C2.LONG_DESC AS CARRERA, ";
+        $sql.= "C.CRG_CRD_DESC AS CONCEPTO, ";
+        $sql.= "C.PAID_AMOUNT AS PAGO, ";
+        $sql.= "C.REVISION_DATE AS FECHA_PAGO, ";
+        $sql.= "cd.MEDIUM_DESC AS desicion, cs.MEDIUM_DESC AS STATUS ";
         
         $sql.= "FROM ACADEMIC AS A ";
         $sql.= "INNER JOIN CHARGECREDIT AS C ";
@@ -84,25 +84,44 @@ class Alumno_model extends CI_Model {
     public function listReinscritos($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
         $last_year = $year - 1;
         $periodo_anterior = '';
+        $concepto_tehuacan = 'CTIKNOR';
+        $last_year = $year - 1;
         switch ( $periodo ) {
             case 'SEMESTREA': {
                 $periodo_anterior = 'SEMESTREB';
+                $colegiaturaM = 'CPCFNOR1';
+                $colegiaturaD1 = 'CPCMNOR2';
                 break;
             }
             case 'SEMESTREB': {
                 $periodo_anterior = 'SEMESTREA';
+                $last_year = $year;
+                $colegiaturaM = 'CPCFNOR8';
+                $colegiaturaD1 = 'CPCMNOR8';
                 break;
             }
             case 'CUATRIMESA': {
                 $periodo_anterior = 'CUATRIMESC';
+                $colegiaturaM = 'CPCFNOR1';
+                $colegiaturaD1 = 'CPCMNOR1';
                 break;
             }
             case 'CUATRIMESB': {
                 $periodo_anterior = 'CUATRIMESA';
+                $last_year = $year;
+                $colegiaturaM = 'CPCFNOR5';
+                $colegiaturaD1 = 'CPCMNOR5';
                 break;
             }
             case 'CUATRIMESC': {
                 $periodo_anterior = 'CUATRIMESB';
+                $last_year = $year;
+                $colegiaturaM = 'CPCFNOR9';
+                $colegiaturaD1 = 'CPCMNOR9';
+                break;
+            }
+            default: {
+                $concepto_tehuacan = '';
                 break;
             }
         }
@@ -112,11 +131,11 @@ class Alumno_model extends CI_Model {
         $sql.= "A.APP_DECISION, ";
         $sql.= "C.AMOUNT, ";
         $sql.= "C.PAID_AMOUNT, ";
-        $sql.= "P.TAX_ID matricula, ";
-        $sql.= "A.PEOPLE_ID idpc, ";
-        $sql.= "(P.FIRST_NAME+' '+P.MIDDLE_NAME) nombre, ";
-        $sql.= "P.LAST_NAME ap1, ";
-        $sql.= "P.Last_Name_Prefix ap2, ";
+        $sql.= "P.TAX_ID MATRICULA, ";
+        $sql.= "A.PEOPLE_ID IDPC, ";
+        $sql.= "(P.FIRST_NAME+' '+P.MIDDLE_NAME) NOMBRE, ";
+        $sql.= "P.LAST_NAME AP1, ";
+        $sql.= "P.Last_Name_Prefix AP2, ";
         
         $sql.= "(SELECT TOP 1 EMAIL_ADDRESS FROM ADDRESSSCHEDULE ";
         $sql.= "WHERE PEOPLE_ORG_ID = A.PEOPLE_ID ";
@@ -125,10 +144,10 @@ class Alumno_model extends CI_Model {
         $sql.= "(SELECT PersonPhone.PhoneNumber FROM PEOPLE ";
         $sql.= "LEFT JOIN PersonPhone ";
         $sql.= "ON PEOPLE.PrimaryPhoneId = PersonPhone.PersonPhoneId ";
-        $sql.= "WHERE PEOPLE.PEOPLE_ID = A.PEOPLE_ID) AS PhoneNumber, ";
+        $sql.= "WHERE PEOPLE.PEOPLE_ID = A.PEOPLE_ID) AS PHONE_NUMBER, ";
         
         $sql.= "A.CURRICULUM clave_carrera, ";
-        $sql.= "CODE_XDESC carrera, ";
+        $sql.= "CODE_XDESC CARRERA, ";
         
         $sql.= "CASE A2.CURRICULUM ";
         $sql.= "WHEN 'PLAT' THEN 'PLAGT' ";
@@ -138,13 +157,13 @@ class Alumno_model extends CI_Model {
         $sql.= "END as car2, ";
         
         $sql.= "A2.ACADEMIC_SESSION plantel2, ";
-        $sql.= "A2.PROGRAM programa2, ";
+        $sql.= "A2.PROGRAM modalidad2, ";
         $sql.= "A2.DEGREE nivel2, ";
         $sql.= "A2.ENROLL_SEPARATION estatus2, ";
         $sql.= "C.CHARGECREDITNUMBER,  ";
         $sql.= "C.CHARGE_CREDIT_CODE clave_concepto, ";
-        $sql.= "C.CRG_CRD_DESC concepto, ";
-        $sql.= "C.PAID_AMOUNT pago, ";
+        $sql.= "C.CRG_CRD_DESC CONCEPTO, ";
+        $sql.= "C.PAID_AMOUNT PAGO, ";
         
         $sql.= "(SELECT TOP 1 c6.ENTRY_DATE ";
         $sql.= "FROM CHARGECREDIT c3 ";
@@ -154,7 +173,7 @@ class Alumno_model extends CI_Model {
         $sql.= "ON c4.ChargeCreditSource = c5.CHARGECREDITNUMBER AND c5.VOID_FLAG = 'N' ";
         $sql.= "INNER JOIN CASHRECEIPT c6 ";
         $sql.= "ON c5.RECEIPT_NUMBER = c6.RECEIPT_NUMBER AND c6.VOID_FLAG = 'N' ";
-        $sql.= "WHERE c3.CHARGECREDITNUMBER = C.CHARGECREDITNUMBER ORDER BY c6.ENTRY_DATE DESC) fecha_pago, ";
+        $sql.= "WHERE c3.CHARGECREDITNUMBER = C.CHARGECREDITNUMBER ORDER BY c6.ENTRY_DATE DESC) FECHA_PAGO, ";
         
         $sql.= "(SELECT COUNT(t.EVENT_ID) total ";
         $sql.= "FROM TRANSCRIPTDETAIL as t ";
@@ -194,20 +213,18 @@ class Alumno_model extends CI_Model {
         $sql.= "AND A.ACADEMIC_TERM = C.ACADEMIC_TERM ";
         $sql.= "AND A.ACADEMIC_SESSION = C.ACADEMIC_SESSION ";
         
-        /*
-        * Verificar que hace esta query, $colegiaturaD2 nunca es definido en alumnos_reinscritos_detalle.php
-
-        if ( $grado == 'MTRIA' ) {
+        if ( $nivel == 'MTRIA' ) {
             $sql.= "AND ( SUMMARY_TYPE IN ('INSC') OR CHARGE_CREDIT_CODE IN ('$colegiaturaM') )";
-        }
-        else if ( $grado == 'DOCT' ) {
-            $sql.= "AND ( SUMMARY_TYPE IN ('INSC') ";
-            $sql.="OR CHARGE_CREDIT_CODE IN ('$colegiaturaD1','$colegiaturaD2') )";
-        }
-        else{
+        } elseif ($nivel == 'DOCT') {
+            /*
+            * Verificar que hace esta query, $colegiaturaD2 nunca es definida en alumnos_reinscritos_detalle.php
+            * $sql.= "AND ( SUMMARY_TYPE IN ('INSC') ";
+            * $sql.="OR CHARGE_CREDIT_CODE IN ('$colegiaturaD1','$colegiaturaD2') )";
+            */
+        } else {
             $sql.= "AND SUMMARY_TYPE IN ('INSC')";
         }
-        */
+        
         $sql.= "AND VOID_FLAG = 'N' ";
         $sql.= "AND PAID_AMOUNT <> 0 ";
         
@@ -250,19 +267,40 @@ class Alumno_model extends CI_Model {
 
         $query = $this->campus->query($sql);
 
-        return $query->result();
+        $results = $query->result();
+        /**
+         * Ver Reportes/alumnos_reinscritos_detalle.php
+         * Tal cual hay que recorrer la lista para saber que alumnos son:
+         * - REINSCRITO
+         * - NUEVO INGRESO
+         */
+        foreach ($results as $r) {
+            if (stristr($r->clave_concepto, $concepto_tehuacan)) {
+                $r->proceso = 'REINSCRITO';
+            } elseif ($r->plantel2 != $plantel) {
+                $r->proceso = 'NUEVO INGRESO';
+            } elseif ($r->nivel2 != $nivel) {
+                $r->proceso = 'NUEVO INGRESO';
+            } elseif ($r->modalidad2 != $modalidad) {
+                $r->proceso = 'NUEVO INGRESO';
+            } else {
+                $r->proceso = 'REINSCRITO';
+            }
+        }
+
+        return $results;
     }
 
     public function listBajas($plantel, $year, $periodo, $nivel, $modalidad, $carrera = false) {
         $sql = "SELECT DISTINCT ";
         $sql.= "TAX_ID, ";
-        $sql.= "PEOPLE_ID AS id, ";
-        $sql.= "(nombre+' '+ nombreuno+' '+ apellido) nombre, ";
-        $sql.= "LONG_DESC baja, ";
+        $sql.= "PEOPLE_ID AS ID, ";
+        $sql.= "(nombre + ' ' + nombreuno + ' ' + apellido) NOMBRE, ";
+        $sql.= "LONG_DESC BAJA, ";
         $sql.= "CURRICULUM, ";
         $sql.= "CODE_XDESC, ";
-        $sql.= "grupo, ";
-        $sql.= "Convert(NVARCHAR,fecha,103) fecha_baja ";
+        $sql.= "GRUPO, ";
+        $sql.= "Convert(NVARCHAR,fecha,103) FECHA_BAJA ";
 
         $sql.= "FROM ";
         $sql.= "( SELECT ";

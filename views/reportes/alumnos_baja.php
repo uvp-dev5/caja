@@ -1,5 +1,7 @@
 <?php $this->load->view('header'); ?>
 
+<?php $this->load->view('caja/reportes/_alumnos_form'); ?>
+
 <table class="table">
 
 <thead>
@@ -18,7 +20,14 @@
 <tbody>
 <?php foreach ( $alumnos as $a ) : ?>
     <tr>
-        
+        <td><?php echo $a->TAX_ID ; ?></td>
+        <td><?php echo $a->ID ; ?></td>
+        <td><?php echo utf8_encode($a->NOMBRE) ; ?></td>
+        <td><?php echo $a->BAJA ; ?></td>
+        <td><?php echo $a->CODE_XDESC ; ?></td>
+        <td><?php echo $a->ULTIMO_SEMESTRE ; ?></td>
+        <td><?php echo $a->GRUPO ; ?></td>
+        <td><?php echo $a->FECHA_BAJA ; ?></td>
     </tr>
 <?php endforeach ?>
 </tbody>

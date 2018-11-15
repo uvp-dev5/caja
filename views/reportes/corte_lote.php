@@ -1,5 +1,7 @@
 <?php $this->load->view('header'); ?>
 
+<?php $this->load->view('_corte_form.php'); ?>
+
 <table class="table">
     <thead>
         <tr>

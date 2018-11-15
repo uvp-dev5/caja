@@ -38,14 +38,23 @@ class Recibos extends CI_Controller {
     public function por_recibo_id() {
         if ( $this->input->post() ) {
             $this->form_validation->set_rule('recibo_id', 'Número de recibo', 'required');
+            $this->form_validation->set_rule('recibo_tipo', 'Tipo de recibo', 'required');
 
             if ( $this->form_validation->run() ) {
                 $this->load->model('caja/recibo_model');
                 $recibo = $this->recibo_model->getInfoById($this->input->post('recibo_id'));
+
                 if ( is_null($recibo->TAX_ID) || ($recibo->TAX_ID == '') ) {
                     //Si el TAX_ID no existe hay que obtenerlo, ver recibos/verificacion.php, linea 119
+                    /**
+                     * Si el people_id (matricula) del recibo es alguna de las siguientes
+                     * '000110011', '000110012', '001100011', '001100012', '001100013'
+                     * No se buscan ni listan las carreras en las que esta inscrito
+                    */
+                    $this->load->model('campus/alumno_model');
+                    $carreras = $this->alumno_model->listCarrerasByPeopleId($recibo->MATRICULA);
                 }
-                //Una vez contemos con un TAX_ID ver recibo_p.php
+                //Una vez contemos con un TAX_ID ver recibo.php y recibo_p.php 
             }
         }
         return $this->load->view('caja/reportes/recibo_por_id');
